@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cavendish University - Student Records Management System</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .navy-bg { background-color: #002147; }
+        .navy-text { color: #002147; }
+        .navy-border { border-color: #002147; }
+        
+        .role-badge { 
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hover-lift {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 33, 71, 0.1);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            DEFAULT: '#002147',
+                            light: '#003a7a',
+                            dark: '#00142b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+    <!-- Auth Container -->
+    <div id="auth-screen" class="flex-grow flex items-center justify-center p-6 bg-[url('https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80&w=2070')] bg-cover bg-center">
+        <div class="absolute inset-0 bg-navy opacity-80"></div>
+        
+        <div class="relative z-10 w-full max-w-md animate-fade-in">
+            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden glass">
+                <div class="navy-bg p-8 text-center">
+                    <div class="bg-white p-3 rounded-full inline-block mb-4 shadow-lg">
+                        <i data-lucide="graduation-cap" class="w-10 h-10 navy-text"></i>
+                    </div>
+                    <h1 class="text-white text-2xl font-bold">Cavendish University</h1>
+                    <p class="text-blue-100 text-sm mt-1">Student Records Management System</p>
+                </div>
+                
+                <div class="p-8">
+                    <form id="login-form" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                    <i data-lucide="user" class="w-5 h-5"></i>
+                                </span>
+                                <input type="text" id="username" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-navy focus:border-navy transition-all" placeholder="Enter username" required>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                    <i data-lucide="lock" class="w-5 h-5"></i>
+                                </span>
+                                <input type="password" id="password" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-navy focus:border-navy transition-all" placeholder="••••••••" required>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-navy focus:ring-navy">
+                                <span class="ml-2 text-xs text-gray-600">Remember me</span>
+                            </label>
+                            <a href="#" class="text-xs font-medium text-navy hover:underline">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="w-full navy-bg text-white py-3 rounded-xl font-bold hover:bg-navy-light transition-colors transform active:scale-95 shadow-lg">
+                            Sign In to Portal
+                        </button>
+                    </form>
+                    
+                    <div class="mt-8 pt-6 border-t border-gray-100 text-center">
+                        <p class="text-sm text-gray-600">
+                            New to the portal? <a href="javascript:void(0)" onclick="toggleAuth('signup')" class="text-navy font-bold hover:underline">Apply for Account</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Up Screen -->
+    <div id="signup-screen" class="hidden flex-grow flex items-center justify-center p-6 bg-[url('https://images.unsplash.com/photo-1523050853064-85a8efb98804?auto=format&fit=crop&q=80&w=2070')] bg-cover bg-center overflow-y-auto">
+        <div class="absolute inset-0 bg-navy opacity-80"></div>
+        
+        <div class="relative z-10 w-full max-w-2xl animate-fade-in my-8">
+            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden glass">
+                <div class="navy-bg p-8 text-center">
+                    <h1 class="text-white text-2xl font-bold">University Portal Enrollment</h1>
+                    <p class="text-blue-100 text-sm mt-1">Capture your identity markers to begin</p>
+                </div>
+                
+                <form id="signup-form" class="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Primary Identity -->
+                    <div class="space-y-4">
+                        <h3 class="font-bold navy-text border-b pb-2">Primary Identity</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">First Name</label>
+                                <input type="text" id="signup-fname" required class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-navy focus:border-navy text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Last Name</label>
+                                <input type="text" id="signup-lname" required class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-navy focus:border-navy text-sm">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">University Email (@cavendish.ac.ug)</label>
+                            <input type="email" id="signup-email" required placeholder="name@cavendish.ac.ug" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-navy focus:border-navy text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Portal Role</label>
+                            <select id="role-selector" onchange="updateRoleFields()" required class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-navy focus:border-navy text-sm bg-gray-50">
+                                <option value="">Select Role...</option>
+                                <option value="Student">Student</option>
+                                <option value="Lecturer">Lecturer</option>
+                                <option value="Administrator">Administrator</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Role-Specific Information (Conditional) -->
+                    <div class="space-y-4">
+                        <h3 class="font-bold navy-text border-b pb-2">Identity Markers</h3>
+                        
+                        <!-- Student Fields -->
+                        <div id="student-fields" class="hidden space-y-4 animate-fade-in">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Registration Number</label>
+                                <input type="text" placeholder="CUU-2026-XXXX" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Program of Study</label>
+                                <select class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm">
+                                    <option>B. Software Engineering</option>
+                                    <option>B. Information Technology</option>
+                                    <option>B. Business Administration</option>
+                                    <option>Bachelor of Laws (LLB)</option>
+                                </select>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 mb-1">Year</label>
+                                    <input type="number" min="1" max="4" value="1" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 mb-1">Semester</label>
+                                    <input type="number" min="1" max="2" value="1" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lecturer Fields -->
+                        <div id="lecturer-fields" class="hidden space-y-4 animate-fade-in">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Staff ID Number</label>
+                                <input type="text" placeholder="EMP-XXX" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Faculty / Department</label>
+                                <select class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm">
+                                    <option>Science & Technology</option>
+                                    <option>Business & Management</option>
+                                    <option>Law</option>
+                                    <option>Socio-Economic Sciences</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Admin Fields -->
+                        <div id="admin-fields" class="hidden space-y-4 animate-fade-in">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Department Code</label>
+                                <input type="text" placeholder="REG-X / FIN-X" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm">
+                            </div>
+                            <p class="text-xs text-gray-500 italic font-medium">Administrator accounts require manual verification by the IT center.</p>
+                        </div>
+
+                        <!-- Generic (Fallback) -->
+                        <div id="default-role-msg" class="text-gray-400 text-sm italic py-8 text-center border-2 border-dashed border-gray-100 rounded-xl">
+                            Please select a role to populate specific fields.
+                        </div>
+                    </div>
+
+                    <!-- Security Phase -->
+                    <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100 mt-4">
+                        <div class="space-y-4">
+                            <h3 class="font-bold navy-text text-sm">Security & Access</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 mb-1">Password</label>
+                                    <input type="password" id="signup-pass" required class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 mb-1">Confirm</label>
+                                    <input type="password" id="signup-pass-conf" required class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <h3 class="font-bold navy-text text-sm">Verification</h3>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Contact Number</label>
+                                <input type="tel" placeholder="+256 ..." required class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-2 flex items-center justify-between mt-6">
+                        <button type="button" onclick="toggleAuth('login')" class="text-sm font-bold text-gray-500 hover:text-navy">
+                            Back to Login
+                        </button>
+                        <button type="submit" class="navy-bg text-white px-10 py-3 rounded-xl font-bold hover:bg-navy-light transition-all shadow-xl transform active:scale-95">
+                            Create Professional Account
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Retake Modal -->
+    <div id="retake-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-6">
+        <div class="absolute inset-0 bg-navy/60 backdrop-blur-sm"></div>
+        <div class="relative bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
+            <div class="navy-bg p-6 text-center text-white">
+                <h3 class="text-xl font-bold">Retake Application</h3>
+                <p class="text-blue-100 text-xs">Official Registrar Form - F.24</p>
+            </div>
+            <div class="p-8 space-y-6">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Target Module</label>
+                    <div id="modal-mod-name" class="p-3 bg-gray-50 rounded-xl navy-text font-bold text-sm">COM211 - OOP</div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Reason for Retake</label>
+                    <select class="w-full p-3 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-navy">
+                        <option>Failed Exam (Score < 50)</option>
+                        <option>Missed Examination</option>
+                        <option>Medical Emergency</option>
+                    </select>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-2xl flex justify-between items-center">
+                    <span class="text-sm font-medium text-blue-800">Retake Fee</span>
+                    <span class="text-lg font-bold text-blue-900">100,000 UGX</span>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="closeModal('retake-modal')" class="flex-grow py-3 bg-gray-100 text-gray-600 font-bold rounded-xl text-sm hover:bg-gray-200 transition-all">Cancel</button>
+                    <button id="submit-retake" class="flex-grow py-3 navy-bg text-white font-bold rounded-xl text-sm hover:bg-navy-light transition-all shadow-lg">Submit & Bill Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Container (Hidden by default) -->
+    <div id="dashboard-screen" class="hidden flex-grow flex">
+        <!-- Sidebar -->
+        <aside class="w-64 navy-bg text-white flex flex-col">
+            <div class="p-6">
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="shield-check" class="w-8 h-8"></i>
+                    <span class="font-bold text-lg tracking-tight">CUU SYSTEM</span>
+                </div>
+            </div>
+            
+            <nav class="flex-grow px-4 pb-4 space-y-2" id="nav-items">
+                <!-- Dynamic items based on role -->
+            </nav>
+            
+            <div class="p-4 border-t border-navy-light">
+                <button id="logout-btn" class="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-red-500/10 hover:text-red-400 transition-colors">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                    <span class="font-medium text-sm">Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-grow flex flex-col bg-gray-50 overflow-y-auto">
+            <header class="bg-white h-16 border-b flex items-center justify-between px-8">
+                <h2 id="page-title" class="text-lg font-bold navy-text">Dashboard Overview</h2>
+                <div class="flex items-center space-x-4">
+                    <div class="text-right mr-4">
+                        <p id="user-name" class="text-sm font-bold navy-text">User Name</p>
+                        <p id="user-role" class="text-[10px] text-gray-500 uppercase tracking-widest">Role</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-navy text-white flex items-center justify-center font-bold">
+                        U
+                    </div>
+                </div>
+            </header>
+            
+            <div id="content-area" class="p-8">
+                <!-- Content will be injected here -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Icons Initialization
+        lucide.createIcons();
+
+        // State Management
+        const state = {
+            user: null,
+            isLoggedIn: false
+        };
+
+        // Navigation Configs
+        const navConfigs = {
+            Admin: [
+                { icon: 'home', label: 'Overview', page: 'overview' },
+                { icon: 'users', label: 'User Management', page: 'users' },
+                { icon: 'bar-chart', label: 'Analytics', page: 'analytics' }
+            ],
+            Student: [
+                { icon: 'home', label: 'My Profile', page: 'profile' },
+                { icon: 'book-open', label: 'Course Enrollment', page: 'enrollment' },
+                { icon: 'award', label: 'My Results', page: 'results' },
+                { icon: 'credit-card', label: 'Financial Statement', page: 'finance' },
+                { icon: 'calendar-days', label: 'Semester Roadmap', page: 'roadmap' }
+            ]
+        };
+
+        // UI Helpers
+        const showScreen = (screenId) => {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('signup-screen').classList.add('hidden');
+            document.getElementById('dashboard-screen').classList.add('hidden');
+            document.getElementById(screenId).classList.remove('hidden');
+            window.scrollTo(0,0);
+        };
+
+        const toggleAuth = (type) => {
+            showScreen(type === 'login' ? 'auth-screen' : 'signup-screen');
+        };
+
+        const updateRoleFields = () => {
+            const role = document.getElementById('role-selector').value;
+            const student = document.getElementById('student-fields');
+            const lecturer = document.getElementById('lecturer-fields');
+            const admin = document.getElementById('admin-fields');
+            const defaultMsg = document.getElementById('default-role-msg');
+
+            // Hide all
+            student.classList.add('hidden');
+            lecturer.classList.add('hidden');
+            admin.classList.add('hidden');
+            defaultMsg.classList.add('hidden');
+
+            if (role === 'Student') student.classList.remove('hidden');
+            else if (role === 'Lecturer') lecturer.classList.remove('hidden');
+            else if (role === 'Administrator') admin.classList.remove('hidden');
+            else defaultMsg.classList.remove('hidden');
+        };
+
+        // Logic for Financial Gate
+        const checkResults = (studentId) => {
+            const hasBalance = (studentId === 1 || studentId === 9);
+            const balanceAmount = studentId === 1 ? '2.5M' : (studentId === 9 ? '4.5M' : '0');
+
+            const results = [
+                { code: 'BIT212', name: 'Systems Analysis and Design', score: 78, grade: 'B+', gp: 4.5 },
+                { code: 'BIT211', name: 'Advanced Database Systems', score: 82, grade: 'A', gp: 5.0 },
+                { code: 'COM211', name: 'Object Oriented Programming', score: 45, grade: 'F', gp: 0.0 },
+                { code: 'BSE212', name: 'Principles of Software Engineering', score: 70, grade: 'B', gp: 4.0 },
+                { code: 'BIT214', name: 'Computer Networks', score: 65, grade: 'C+', gp: 3.5 },
+                { code: 'COM221', name: 'Operating Systems Principles', score: 61, grade: 'C', gp: 3.0 }
+            ];
+
+            let html = `
+                <div class="animate-fade-in space-y-8">
+                    <!-- Grading System Header -->
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div>
+                            <h3 class="text-xl font-bold navy-text">Academic Results Overview</h3>
+                            <p class="text-sm text-gray-500">Semester 1 Provisional Results • 2023/2024</p>
+                        </div>
+                        <button onclick="toggleGradingSystem()" class="text-xs font-bold navy-text bg-blue-50 px-4 py-2 rounded-xl border border-blue-100 hover:bg-blue-100 transition-all flex items-center gap-2">
+                            <i data-lucide="info" class="w-4 h-4"></i> Grading Standard
+                        </button>
+                    </div>
+
+                    <div id="grading-standard" class="hidden bg-navy text-white rounded-3xl p-8 animate-fade-in overflow-hidden relative">
+                        <h4 class="text-sm font-bold mb-4 uppercase tracking-widest text-blue-200">Uganda Standard University Grading (5.0 Scale)</h4>
+                        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                            <div class="p-3 bg-white/10 rounded-xl text-center"><p class="text-lg font-bold">A</p><p class="text-[10px] text-blue-200">80-100 (5.0)</p></div>
+                            <div class="p-3 bg-white/10 rounded-xl text-center"><p class="text-lg font-bold">B+</p><p class="text-[10px] text-blue-200">75-79 (4.5)</p></div>
+                            <div class="p-3 bg-white/10 rounded-xl text-center"><p class="text-lg font-bold">B</p><p class="text-[10px] text-blue-200">70-74 (4.0)</p></div>
+                            <div class="p-3 bg-white/10 rounded-xl text-center"><p class="text-lg font-bold">C+</p><p class="text-[10px] text-blue-200">65-69 (3.5)</p></div>
+                            <div class="p-3 bg-white/10 rounded-xl text-center"><p class="text-lg font-bold">C</p><p class="text-[10px] text-blue-200">60-64 (3.0)</p></div>
+                            <div class="p-3 bg-white/10 rounded-xl text-center"><p class="text-lg font-bold">D</p><p class="text-[10px] text-blue-200">50-59 (2.0)</p></div>
+                            <div class="p-3 bg-red-500/20 rounded-xl text-center"><p class="text-lg font-bold">F</p><p class="text-[10px] text-red-200">0-49 (0.0)</p></div>
+                        </div>
+                    </div>
+
+                    <!-- Results Table -->
+                    <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50/50 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                    <th class="p-6">Code</th>
+                                    <th class="p-6">Module Name</th>
+                                    <th class="p-6 text-center">Score</th>
+                                    <th class="p-6 text-center">Grade</th>
+                                    <th class="p-6 text-center">GP</th>
+                                    <th class="p-6 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                ${results.map(r => {
+                                    const isFail = r.score < 50;
+                                    return `
+                                        <tr class="group hover:bg-gray-50 transition-colors">
+                                            <td class="p-6 font-mono font-bold text-navy text-sm">${r.code}</td>
+                                            <td class="p-6 font-medium text-gray-700 text-sm">${r.name}</td>
+                                            <td class="p-6 text-center">
+                                                ${hasBalance ? '<span class="text-[10px] font-bold text-red-400 bg-red-50 px-2 py-1 rounded">BLOCKED</span>' : 
+                                                `<span class="text-sm font-bold ${isFail ? 'text-red-500' : 'text-gray-800'}">${r.score}</span>`}
+                                            </td>
+                                            <td class="p-6 text-center">
+                                                ${hasBalance ? '<span class="text-[10px] font-bold text-red-400 bg-red-50 px-2 py-1 rounded">BLOCKED</span>' : 
+                                                `<span class="px-3 py-1 ${isFail ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'} rounded-full font-bold text-xs">${r.grade}</span>`}
+                                            </td>
+                                            <td class="p-6 text-center font-bold text-navy text-sm">${hasBalance ? '—' : r.gp.toFixed(1)}</td>
+                                            <td class="p-6 text-right">
+                                                ${!hasBalance && isFail ? `
+                                                    <button onclick="openRetakeModal('${r.code}', '${r.name}')" class="text-[10px] font-bold text-red-600 hover:text-red-700 underline underline-offset-4">
+                                                        Apply for Retake
+                                                    </button>
+                                                ` : '<span class="text-[10px] text-gray-300 font-bold uppercase">No Actions</span>'}
+                                            </td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    ${hasBalance ? `
+                        <div class="bg-red-50 border border-red-200 p-8 rounded-3xl text-center">
+                            <div class="bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+                                <i data-lucide="lock" class="w-10 h-10 text-red-500"></i>
+                            </div>
+                            <h4 class="text-red-700 font-bold text-lg mb-2">RESULTS WITHHELD</h4>
+                            <p class="text-red-600 mb-6 max-w-md mx-auto text-sm">
+                                System records show an outstanding balance of <strong>${balanceAmount} UGX</strong>. 
+                                Full results and GPA calculation are blocked until payment is cleared.
+                            </p>
+                            <button class="bg-red-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg active:scale-95">
+                                Pay Balance Online
+                            </button>
+                        </div>
+                    ` : `
+                        <div class="flex flex-col md:flex-row justify-between items-center gap-6 p-8 bg-white border border-gray-100 rounded-3xl shadow-sm">
+                            <div class="flex items-center gap-6">
+                                <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center">
+                                    <i data-lucide="award" class="w-8 h-8 navy-text"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-1">Semester GPA</p>
+                                    <p class="text-3xl font-bold navy-text">3.33 / 5.0</p>
+                                </div>
+                            </div>
+                            <button class="bg-navy text-white px-8 py-4 rounded-2xl font-bold hover:bg-navy-light transition-all shadow-xl flex items-center gap-3 active:scale-95">
+                                <i data-lucide="download" class="w-5 h-5"></i>
+                                Download Provisional Results
+                            </button>
+                        </div>
+                    `}
+                </div>
+            `;
+            document.getElementById('content-area').innerHTML = html;
+            lucide.createIcons();
+        };
+
+        const toggleGradingSystem = () => {
+            document.getElementById('grading-standard').classList.toggle('hidden');
+        };
+
+        const openRetakeModal = (code, name) => {
+            document.getElementById('modal-mod-name').textContent = `${code} - ${name}`;
+            document.getElementById('retake-modal').classList.remove('hidden');
+        };
+
+        const closeModal = (id) => {
+            document.getElementById(id).classList.add('hidden');
+        };
+
+        const renderOverview = (role) => {
+            const studentStats = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover-lift">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="p-3 bg-blue-50 rounded-xl text-blue-600"><i data-lucide="book" class="w-6 h-6"></i></span>
+                            <span class="text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded-full font-bold">ACTIVE</span>
+                        </div>
+                        <p class="text-gray-500 text-sm font-medium">Enrolled Courses</p>
+                        <h4 class="text-3xl font-bold navy-text">6</h4>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover-lift">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="p-3 bg-green-50 rounded-xl text-green-600"><i data-lucide="dollar-sign" class="w-6 h-6"></i></span>
+                        </div>
+                        <p class="text-gray-500 text-sm font-medium">Fee Balance</p>
+                        <h4 class="text-3xl font-bold ${state.user.id == 6 ? 'text-red-500' : 'text-green-600'}">${state.user.id == 6 ? '1.5M UGX' : 'Cleared'}</h4>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover-lift">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="p-3 bg-purple-50 rounded-xl text-purple-600"><i data-lucide="trending-up" class="w-6 h-6"></i></span>
+                        </div>
+                        <p class="text-gray-500 text-sm font-medium">Current GPA</p>
+                        <h4 class="text-3xl font-bold navy-text">3.82</h4>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('content-area').innerHTML = `
+                <div class="animate-fade-in">
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold navy-text">Welcome back, ${state.user.full_name}!</h3>
+                        <p class="text-gray-500">Here's your academic summary for Semester 1, 2024.</p>
+                    </div>
+                    ${role === 'Student' ? studentStats : '<p>Admin components loading...</p>'}
+                </div>
+            `;
+            lucide.createIcons();
+        };
+
+        // Event Listeners
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            
+            // Mock Auth Logic
+            const users = {
+                'mary_atwine': { id: 1, role: 'Student', full_name: 'Mary Atwine' },
+                'john_musoke': { id: 2, role: 'Student', full_name: 'John Musoke' },
+                'brian_k': { id: 3, role: 'Student', full_name: 'Brian Katerega' },
+                'david_o': { id: 7, role: 'Student', full_name: 'David Okello' },
+                'peter_b': { id: 9, role: 'Student', full_name: 'Peter Bukenya' },
+                'cuu_admin': { id: 101, role: 'Admin', full_name: 'System Admin (Moses)' }
+            };
+
+            const user = users[username];
+            if (user) {
+                state.user = user;
+                state.isLoggedIn = true;
+                
+                // Update Sidebar
+                const nav = document.getElementById('nav-items');
+                const config = navConfigs[user.role] || [];
+                nav.innerHTML = config.map(item => `
+                    <button onclick="navigate('${item.page}')" class="flex items-center space-x-3 w-full p-4 rounded-xl hover:bg-white/10 transition-all group">
+                        <i data-lucide="${item.icon}" class="w-5 h-5 text-blue-200 group-hover:text-white"></i>
+                        <span class="font-medium text-sm">${item.label}</span>
+                    </button>
+                `).join('');
+                
+                // Update Header
+                document.getElementById('user-name').textContent = user.full_name;
+                document.getElementById('user-role').textContent = user.role;
+                
+                showScreen('dashboard-screen');
+                renderOverview(user.role);
+                lucide.createIcons();
+            } else {
+                alert('Invalid credentials! Try "student_john", "student_mary", or "cuu_admin"');
+            }
+        });
+
+        const renderProfile = (user) => {
+            const hasBalance = (user.id === 1 || user.id === 9); // Mary and Peter
+            const balanceAmount = user.id === 1 ? '2.5M' : (user.id === 9 ? '4.5M' : '0');
+            
+            let html = `
+                <div class="animate-fade-in max-w-5xl mx-auto space-y-8">
+                    <!-- 1. IDENTITY HEADER -->
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 flex flex-col md:flex-row items-center md:items-start gap-8">
+                        <div class="relative">
+                            <div class="w-32 h-32 rounded-full border-4 navy-border p-1">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}" class="w-full h-full rounded-full bg-blue-50" alt="Profile">
+                            </div>
+                            <div class="absolute bottom-1 right-1 bg-green-500 text-white p-1.5 rounded-full border-4 border-white shadow-sm" title="Verified by Registry">
+                                <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+
+                        <div class="flex-grow text-center md:text-left">
+                            <div class="flex flex-col md:flex-row md:items-center gap-2 mb-2">
+                                <h2 class="text-3xl font-bold navy-text">${user.full_name}</h2>
+                                <span class="role-badge ${user.role === 'Student' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}">${user.role}</span>
+                            </div>
+                            <p class="text-lg font-bold navy-text mb-1">Bachelor of Science in Software Engineering</p>
+                            <p class="text-gray-500 font-medium mb-6">Faculty of Science & Technology • Year ${user.id === 1 ? '2' : '1'}</p>
+                            
+                            <!-- Digital ID Card -->
+                            <div class="inline-flex items-center gap-6 bg-gray-50 p-4 rounded-2xl border border-gray-100 group hover:border-navy transition-all cursor-pointer">
+                                <div>
+                                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">University Digital ID</p>
+                                    <p class="text-lg font-mono font-bold navy-text">${user.id === 1 ? 'CUU-2024-001' : 'CUU-2024-002'}</p>
+                                </div>
+                                <div class="w-12 h-12 bg-white p-1 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${user.username}" class="w-full h-full" alt="QR">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Left Column: Details -->
+                        <div class="lg:col-span-2 space-y-8">
+                            <!-- ACADEMIC SNAPSHOT -->
+                            <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+                                <h3 class="text-lg font-bold navy-text mb-6 flex items-center gap-2">
+                                    <i data-lucide="graduation-cap" class="w-5 h-5"></i> Academic Snapshot
+                                </h3>
+                                <div class="grid grid-cols-3 gap-4">
+                                    <div class="bg-blue-50/50 p-4 rounded-2xl text-center">
+                                        <p class="text-xs text-gray-500 font-bold mb-1">GPA</p>
+                                        <p class="text-2xl font-bold navy-text">3.82</p>
+                                    </div>
+                                    <div class="bg-blue-50/50 p-4 rounded-2xl text-center">
+                                        <p class="text-xs text-gray-500 font-bold mb-1">CREDITS</p>
+                                        <p class="text-2xl font-bold navy-text">42</p>
+                                    </div>
+                                    <div class="bg-blue-50/50 p-4 rounded-2xl text-center">
+                                        <p class="text-xs text-gray-500 font-bold mb-1">SEMESTER</p>
+                                        <p class="text-2xl font-bold navy-text">2.1</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PERSONAL DETAILS -->
+                            <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+                                <div class="flex items-center justify-between mb-6">
+                                    <h3 class="text-lg font-bold navy-text flex items-center gap-2">
+                                        <i data-lucide="user" class="w-5 h-5"></i> Personal Details
+                                    </h3>
+                                    <button class="text-navy font-bold text-xs hover:underline">Edit Details</button>
+                                </div>
+                                <div class="grid grid-cols-2 gap-y-6 gap-x-12">
+                                    <div>
+                                        <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Personal Email</p>
+                                        <p class="text-sm font-medium text-gray-700">${user.username}@gmail.com</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Mobile Number</p>
+                                        <p class="text-sm font-medium text-gray-700">+256 701 234 567</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Next of Kin</p>
+                                        <p class="text-sm font-medium text-gray-700">Alice Musoke (Mother)</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Emergency Contact</p>
+                                        <p class="text-sm font-medium text-gray-700">+256 772 999 888</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Finance & Vault -->
+                        <div class="space-y-8">
+                            <!-- FINANCIAL STATUS WIDGET -->
+                            <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+                                <h3 class="text-lg font-bold navy-text mb-6">Financial Standing</h3>
+                                <div class="space-y-4 mb-6">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm text-gray-500">Account Balance</span>
+                                        <span class="text-sm font-bold ${hasBalance ? 'text-red-500' : 'text-green-600'}">
+                                            ${hasBalance ? '● Outstanding' : '● Paid'}
+                                        </span>
+                                    </div>
+                                    <div class="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                                        <div class="h-full ${hasBalance ? 'bg-orange-400 w-1/2' : 'bg-green-500 w-full'} rounded-full"></div>
+                                    </div>
+                                    <p class="text-2xl font-bold navy-text">${hasBalance ? balanceAmount + ' UGX' : 'Cleared'}</p>
+                                </div>
+                                <button class="w-full py-3 bg-gray-50 hover:bg-gray-100 text-navy font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2">
+                                    <i data-lucide="download" class="w-4 h-4"></i> Download Statement
+                                </button>
+                            </div>
+
+                            <!-- SEMESTER ROADMAP & CALENDAR -->
+                            <div class="bg-navy rounded-3xl p-8 text-white shadow-xl">
+                                <h3 class="text-lg font-bold mb-6 flex items-center gap-2 border-b border-navy-light pb-4">
+                                    <i data-lucide="calendar" class="w-5 h-5 text-blue-300"></i> Semester Roadmap
+                                </h3>
+                                
+                                <ul class="space-y-6 mb-8 text-sm">
+                                    <li class="flex justify-between items-center group">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs text-blue-300 uppercase font-bold tracking-tighter">Mid-Sem Exams</span>
+                                            <span class="font-medium">April 10, 2026</span>
+                                        </div>
+                                        <i data-lucide="check-circle" class="w-5 h-5 text-green-400 opacity-50 group-hover:opacity-100 transition-opacity"></i>
+                                    </li>
+                                    <li class="flex justify-between items-center group border-l-2 border-blue-400/30 pl-4">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs text-blue-300 uppercase font-bold tracking-tighter">Coursework Upload</span>
+                                            <span class="font-medium">May 18, 2026</span>
+                                        </div>
+                                        <div class="w-2 h-2 bg-blue-400 rounded-full animate-ping"></div>
+                                    </li>
+                                    <li class="flex justify-between items-center group">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs ${hasBalance ? 'text-red-400' : 'text-blue-300'} uppercase font-bold tracking-tighter">Final Examinations</span>
+                                            <span class="font-medium ${hasBalance ? 'text-red-300' : ''}">June 01, 2026</span>
+                                        </div>
+                                        ${hasBalance ? '<i data-lucide="lock" class="w-5 h-5 text-red-400"></i>' : '<i data-lucide="arrow-right" class="w-4 h-4 text-blue-300"></i>'}
+                                    </li>
+                                </ul>
+
+                                <!-- Mini Calendar Widget -->
+                                <div class="bg-navy-dark/50 rounded-2xl p-4 border border-navy-light/10">
+                                    <div class="flex justify-between items-center mb-4 px-1">
+                                        <span class="text-xs font-bold uppercase tracking-widest text-blue-200">May 2026</span>
+                                        <div class="flex gap-2">
+                                            <i data-lucide="chevron-left" class="w-3 h-3 text-blue-400 cursor-pointer"></i>
+                                            <i data-lucide="chevron-right" class="w-3 h-3 text-blue-400 cursor-pointer"></i>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-7 text-center text-[10px] gap-2 font-bold text-blue-400 mb-2">
+                                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                                    </div>
+                                    <div class="grid grid-cols-7 text-center text-[10px] gap-2 transition-all">
+                                        <span class="text-navy-light">27</span><span class="text-navy-light">28</span><span class="text-navy-light">29</span><span class="text-navy-light">30</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">1</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">2</span>
+                                        <span class="p-1 bg-white text-navy rounded-full shadow-lg">3</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">4</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">5</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">6</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1 border-b border-red-400">7</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">8</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">9</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">10</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- DOCUMENT VAULT -->
+                            <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+                                <h3 class="text-lg font-bold navy-text mb-6">Document Vault</h3>
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between p-3 rounded-xl border border-gray-50 hover:bg-gray-50 transition-colors group cursor-pointer">
+                                        <div class="flex items-center gap-3">
+                                            <i data-lucide="file-text" class="w-5 h-5 text-gray-400 group-hover:text-navy"></i>
+                                            <span class="text-sm font-medium text-gray-700">Admission Letter</span>
+                                        </div>
+                                        <i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i>
+                                    </div>
+                                    
+                                    <!-- Conditional Exam Permit -->
+                                    <div class="flex items-center justify-between p-3 rounded-xl border ${hasBalance ? 'bg-red-50/30' : 'border-gray-50 hover:bg-gray-50'} transition-colors group relative">
+                                        <div class="flex items-center gap-3">
+                                            <i data-lucide="${hasBalance ? 'lock' : 'ticket'}" class="w-5 h-5 ${hasBalance ? 'text-red-400' : 'text-gray-400 group-hover:text-navy'}"></i>
+                                            <span class="text-sm font-medium ${hasBalance ? 'text-red-400' : 'text-gray-700'}">Exam Permit 2024</span>
+                                        </div>
+                                        ${hasBalance ? '<span class="text-[8px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded-full font-bold">LOCKED</span>' : '<i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i>'}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('content-area').innerHTML = html;
+            lucide.createIcons();
+        };
+
+        const renderEnrollment = (user) => {
+            const hasBalance = (user.id === 1 || user.id === 9);
+            const programs = [
+                "BSc. Software Engineering", "BSc. Computer Science", "Bachelor of IT", 
+                "BSc. Data Science & AI", "BBA. Accounting & Finance", "BBA. Procurement & Logistics",
+                "BBA. Human Resource Management", "BBA. Banking & Finance", "BBA. Entrepreneurship",
+                "Bachelor of Economics & Statistics", "Bachelor of Laws (LLB)", "BA. International Relations & Diplomacy",
+                "BA. Public Administration & Management", "Bachelor of Journalism & Mass Comm", "BSc. Public Health",
+                "BSc. Environmental Health Science", "Diploma in Computer Science & IT", "Diploma in Paralegal Studies",
+                "Master of Information Technology", "Master of Business Administration"
+            ];
+
+            const myModules = [
+                { code: 'BIT212', name: 'Systems Analysis and Design', credits: 4, status: 'Active' },
+                { code: 'BIT211', name: 'Advanced Database Systems', credits: 4, status: 'Active' },
+                { code: 'COM211', name: 'Object Oriented Programming', credits: 3, status: 'Active' },
+                { code: 'BSE212', name: 'Principles of Software Engineering', credits: 3, status: 'Pending' },
+                { code: 'BIT214', name: 'Computer Networks', credits: 4, status: 'Active' },
+                { code: 'COM221', name: 'Operating Systems Principles', credits: 3, status: 'Active' }
+            ];
+
+            let html = `
+                <div class="animate-fade-in grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left Column: Available Programs -->
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 flex flex-col h-fit">
+                        <h3 class="text-xl font-bold navy-text mb-2">Available Programs</h3>
+                        <p class="text-xs text-gray-400 mb-6 font-medium">Browse University programs across all faculties</p>
+                        
+                        <div class="relative mb-6">
+                            <input type="text" placeholder="Search programs..." class="w-full pl-10 pr-4 py-2 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-navy transition-all">
+                            <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
+                        </div>
+
+                        <div class="space-y-2 overflow-y-auto max-h-[500px] pr-2">
+                            ${programs.map(p => `
+                                <div class="p-3 bg-gray-50 rounded-xl hover:bg-navy hover:text-white transition-all cursor-pointer group flex items-center justify-between">
+                                    <span class="text-xs font-semibold">${p}</span>
+                                    <i data-lucide="plus-circle" class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Registered Modules -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                                <div>
+                                    <h3 class="text-xl font-bold navy-text">My Registered Modules</h3>
+                                    <p class="text-sm text-gray-500">Year 2 Semester 1 • Current Enrollment</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="px-4 py-2 border navy-border navy-text rounded-xl font-bold text-xs hover:bg-blue-50 transition-colors">Download Timetable</button>
+                                </div>
+                            </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr class="text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b pb-4">
+                                            <th class="pb-4">Module Code</th>
+                                            <th class="pb-4">Module Name</th>
+                                            <th class="pb-4 text-center">CU</th>
+                                            <th class="pb-4">Status</th>
+                                            <th class="pb-4 text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y">
+                                        ${myModules.map(m => `
+                                            <tr class="group hover:bg-gray-50 transition-colors">
+                                                <td class="py-4 font-mono font-bold text-navy text-sm">${m.code}</td>
+                                                <td class="py-4 font-medium text-gray-700 text-sm">${m.name}</td>
+                                                <td class="py-4 text-center font-bold text-gray-600 text-sm">${m.credits}</td>
+                                                <td class="py-4">
+                                                    <span class="px-2 py-1 ${m.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'} rounded-full text-[10px] font-bold uppercase">
+                                                        ${m.status}
+                                                    </span>
+                                                </td>
+                                                <td class="py-4 text-right">
+                                                    <div class="group relative inline-block">
+                                                        <button 
+                                                            ${hasBalance ? 'disabled' : ''} 
+                                                            class="${hasBalance ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'navy-bg text-white hover:bg-navy-light'} px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all shadow-sm"
+                                                        >
+                                                            Register for Exams
+                                                        </button>
+                                                        ${hasBalance ? `
+                                                            <div class="absolute bottom-full right-0 mb-2 w-48 hidden group-hover:block bg-gray-900 text-white text-[10px] p-2 rounded shadow-lg z-50">
+                                                                <i data-lucide="alert-triangle" class="w-3 h-3 inline mr-1 mb-0.5"></i>
+                                                                Clear outstanding balance to register for exams.
+                                                            </div>
+                                                        ` : ''}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Specialization Note (SDLC Ref) -->
+                        <div class="bg-navy rounded-3xl p-8 text-white shadow-xl bg-[linear-gradient(135deg,#002147_0%,#003a7a_100%)] relative overflow-hidden">
+                            <div class="relative z-10">
+                                <h4 class="text-lg font-bold mb-2">Systems Analysis & Database Focus</h4>
+                                <p class="text-blue-100 text-sm max-w-xl">
+                                    Your current enrollment is optimized for the SDLC Design Phase. Modules like <strong>BIT212</strong> and <strong>BIT211</strong> 
+                                    directly support your work on Relational Schemas and Prototype Logic.
+                                </p>
+                            </div>
+                            <i data-lucide="database" class="absolute -right-4 -bottom-4 w-32 h-32 text-white/5"></i>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('content-area').innerHTML = html;
+            lucide.createIcons();
+        };
+
+        const renderFinance = (user) => {
+            const hasBalance = (user.id === 1 || user.id === 9);
+            const balanceAmount = user.id === 1 ? 2500000 : (user.id === 9 ? 4500000 : 0);
+            
+            const transactions = [
+                { date: '01/02/2026', desc: 'Tuition Fees - Semester 1', debit: 1800000, credit: 0 },
+                { date: '01/02/2026', desc: 'Functional Fees', debit: 450000, credit: 0 },
+                { date: '05/02/2026', desc: 'Bank Payment - Stanbic', debit: 0, credit: 1000000 },
+                { date: '15/03/2026', desc: 'Mobile Money Payment', debit: 0, credit: 500000 }
+            ];
+
+            if (user.id === 9) { // Peter's additional charges
+                transactions.push({ date: '20/04/2026', desc: 'Library Fine (Overdue)', debit: 50000, credit: 0 });
+            }
+
+            let runningBalance = 0;
+            const ledger = transactions.map(t => {
+                runningBalance += (t.debit - t.credit);
+                return { ...t, balance: runningBalance };
+            });
+
+            const totalBilled = transactions.reduce((sum, t) => sum + t.debit, 0);
+            const totalPaid = transactions.reduce((sum, t) => sum + t.credit, 0);
+
+            let html = `
+                <div class="animate-fade-in space-y-8 max-w-5xl mx-auto">
+                    <!-- 1. STATEMENT HEADER -->
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-start gap-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 bg-navy rounded-2xl flex items-center justify-center text-white">
+                                <i data-lucide="building-2" class="w-8 h-8"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold navy-text">Financial Statement</h3>
+                                <p class="text-xs text-gray-500 font-medium">Cavendish University Uganda • Ggaba Road, Kampala</p>
+                            </div>
+                        </div>
+                        <div class="px-6 py-3 rounded-2xl ${runningBalance <= 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} font-bold text-sm flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full ${runningBalance <= 0 ? 'bg-green-500' : 'bg-red-500'} animate-pulse"></div>
+                            ${runningBalance <= 0 ? 'FINANCIALLY CLEARED' : 'PENDING CLEARANCE'}
+                        </div>
+                    </div>
+
+                    <!-- 2. TRANSACTION LEDGER -->
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="p-6 border-b flex justify-between items-center bg-gray-50/50">
+                            <h4 class="font-bold navy-text text-sm uppercase tracking-wider">Transaction Ledger</h4>
+                            <button class="text-navy font-bold text-xs flex items-center gap-2 hover:underline">
+                                <i data-lucide="printer" class="w-4 h-4"></i> Print Full Statement
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-navy text-white text-[10px] uppercase tracking-widest">
+                                    <tr>
+                                        <th class="p-4">Date</th>
+                                        <th class="p-4">Description</th>
+                                        <th class="p-4 text-right">Debit (Charges)</th>
+                                        <th class="p-4 text-right">Credit (Payments)</th>
+                                        <th class="p-4 text-right">Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm divide-y">
+                                    ${ledger.map((t, i) => `
+                                        <tr class="${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'}">
+                                            <td class="p-4 text-gray-500 font-medium">${t.date}</td>
+                                            <td class="p-4 font-semibold navy-text">${t.desc}</td>
+                                            <td class="p-4 text-right text-red-500 font-medium">${t.debit > 0 ? t.debit.toLocaleString() : '—'}</td>
+                                            <td class="p-4 text-right text-green-600 font-medium">${t.credit > 0 ? t.credit.toLocaleString() : '—'}</td>
+                                            <td class="p-4 text-right font-bold navy-text">${t.balance.toLocaleString()} UGX</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- 3. SUMMARY TOTALS -->
+                        <div class="p-8 bg-gray-50 flex flex-col md:flex-row justify-end gap-12">
+                            <div class="text-right">
+                                <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Total Billed</p>
+                                <p class="text-xl font-bold navy-text">${totalBilled.toLocaleString()} UGX</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Total Paid</p>
+                                <p class="text-xl font-bold text-green-600">${totalPaid.toLocaleString()} UGX</p>
+                            </div>
+                            <div class="text-right bg-white px-6 py-3 rounded-2xl shadow-sm border border-gray-100">
+                                <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Outstanding Balance</p>
+                                <p class="text-2xl font-black text-red-600">${runningBalance.toLocaleString()} UGX</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. SMART FEATURES -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-blue-600 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden group">
+                            <div class="relative z-10">
+                                <h4 class="text-xl font-bold mb-2">Simulate Payment</h4>
+                                <p class="text-blue-100 text-sm mb-6">Test the "Financial Gate" by paying your outstanding balance.</p>
+                                <button onclick="simulatePayment(${runningBalance})" class="bg-white text-blue-600 px-8 py-3 rounded-xl font-bold hover:bg-blue-50 transition-all shadow-lg active:scale-95 flex items-center gap-2">
+                                    <i data-lucide="smartphone" class="w-5 h-5"></i>
+                                    Mobile Money Pay
+                                </button>
+                            </div>
+                            <i data-lucide="credit-card" class="absolute -right-4 -bottom-4 w-32 h-32 text-white/10 group-hover:scale-110 transition-transform"></i>
+                        </div>
+
+                        <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex flex-col justify-center">
+                            <div class="flex items-center gap-3 mb-4 text-orange-500">
+                                <i data-lucide="info" class="w-6 h-6"></i>
+                                <h4 class="font-bold">Exam Permit Requirement</h4>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-0">
+                                Please note: According to University Financial Regulations, you require a <strong>Zero Balance</strong> 
+                                to generate your Exam Permit and view your final results.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('content-area').innerHTML = html;
+            lucide.createIcons();
+        };
+
+        const renderRoadmap = (user) => {
+            const milestones = [
+                { date: 'April 10, 2026', title: 'Mid-Semester Examinations Begin', type: 'exam', color: 'blue' },
+                { date: 'May 18, 2026', title: 'Coursework & Assignment Deadline', type: 'deadline', color: 'purple' },
+                { date: 'June 01, 2026', title: 'Final Examinations Commencement', type: 'exam', color: 'red' },
+                { date: 'June 15, 2026', title: 'Official End of Semester', type: 'closing', color: 'green' }
+            ];
+
+            let html = `
+                <div class="animate-fade-in max-w-6xl mx-auto space-y-8">
+                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex justify-between items-center">
+                        <div>
+                            <h3 class="text-2xl font-bold navy-text">Semester Roadmap 2026</h3>
+                            <p class="text-gray-500">Official academic timeline for the Faculty of Science & Technology</p>
+                        </div>
+                        <div class="bg-blue-50 px-4 py-2 rounded-xl border border-blue-100 text-blue-700 font-bold text-xs">
+                            Current Week: 12
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <!-- Left Column: Calendar UI -->
+                        <div class="lg:col-span-5 space-y-6">
+                            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h4 class="font-bold navy-text">April 2026</h4>
+                                    <div class="flex gap-2">
+                                        <button class="p-2 hover:bg-gray-100 rounded-lg"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                                        <button class="p-2 hover:bg-gray-100 rounded-lg"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-7 text-center text-xs font-bold text-gray-400 mb-4">
+                                    <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                                </div>
+                                <div class="grid grid-cols-7 gap-2 text-center text-sm">
+                                    <!-- Simplified Calendar Logic for April -->
+                                    <span class="text-gray-300">29</span><span class="text-gray-300">30</span><span class="text-gray-300">31</span>
+                                    <span>1</span><span>2</span><span>3</span><span>4</span>
+                                    <span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+                                    <span class="bg-blue-600 text-white rounded-xl font-bold flex items-center justify-center p-2 shadow-lg relative">
+                                        10
+                                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full"></span>
+                                    </span>
+                                    <span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span>
+                                    <span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span>
+                                    <span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span>
+                                </div>
+                                <div class="mt-8 pt-6 border-t border-gray-50 space-y-3">
+                                    <div class="flex items-center gap-3 text-xs">
+                                        <span class="w-3 h-3 bg-blue-600 rounded-full"></span>
+                                        <span class="text-gray-600 font-medium">Mid-Semester Start</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-xs">
+                                        <span class="w-3 h-3 bg-red-600 rounded-full"></span>
+                                        <span class="text-gray-600 font-medium">Final Examinations Start (June 1)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Vertical Timeline -->
+                        <div class="lg:col-span-7 bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                            <h4 class="font-bold navy-text mb-8">Key Semester Milestones</h4>
+                            <div class="relative space-y-8 before:absolute before:left-4 before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-100">
+                                ${milestones.map(m => `
+                                    <div class="relative pl-12 group">
+                                        <div class="absolute left-0 top-1 w-8 h-8 rounded-full border-4 border-white shadow-md z-10 
+                                            ${m.color === 'blue' ? 'bg-blue-600' : (m.color === 'red' ? 'bg-red-600' : (m.color === 'green' ? 'bg-green-600' : 'bg-purple-600'))}">
+                                        </div>
+                                        <div class="p-4 bg-gray-50 rounded-2xl group-hover:bg-blue-50/50 transition-colors border border-transparent group-hover:border-blue-100">
+                                            <p class="text-xs font-bold text-gray-400 mb-1">${m.date}</p>
+                                            <h5 class="font-bold navy-text">${m.title}</h5>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('content-area').innerHTML = html;
+            lucide.createIcons();
+        };
+
+        const simulatePayment = (balance) => {
+            if (balance <= 0) {
+                alert('Account is already cleared! No payment required.');
+                return;
+            }
+            const amount = prompt(`Enter Payment Amount (Balance: ${balance.toLocaleString()} UGX):`, balance);
+            if (amount) {
+                alert(`SUCCESS: Payment of ${Number(amount).toLocaleString()} UGX processed successfully via Mobile Money. Your ledger will update shortly.`);
+            }
+        };
+
+        const navigate = (page) => {
+            document.getElementById('page-title').textContent = page.charAt(0).toUpperCase() + page.slice(1);
+            if (page === 'results') {
+                checkResults(state.user.id);
+            } else if (page === 'profile') {
+                renderProfile(state.user);
+            } else if (page === 'enrollment') {
+                renderEnrollment(state.user);
+            } else if (page === 'finance') {
+                renderFinance(state.user);
+            } else if (page === 'roadmap') {
+                renderRoadmap(state.user);
+            } else if (page === 'overview') {
+                renderOverview(state.user.role);
+            } else {
+                document.getElementById('content-area').innerHTML = `
+                    <div class="bg-white p-12 rounded-2xl shadow-sm text-center">
+                        <i data-lucide="construction" class="w-16 h-16 navy-text mx-auto mb-4 opacity-20"></i>
+                        <h3 class="text-xl font-bold navy-text">${page.toUpperCase()} MODULE</h3>
+                        <p class="text-gray-500 mt-2">Implementation in progress for SDLC Phase 4.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+        };
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            state.user = null;
+            state.isLoggedIn = false;
+            showScreen('auth-screen');
+        });
+
+        // Signup Validation & Logic
+        document.getElementById('signup-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signup-email').value;
+            const pass = document.getElementById('signup-pass').value;
+            const conf = document.getElementById('signup-pass-conf').value;
+            const role = document.getElementById('role-selector').value;
+
+            // 1. Email Validation (@cavendish.ac.ug)
+            if (!email.toLowerCase().endsWith('@cavendish.ac.ug')) {
+                alert('ERROR: Invalid identity domain. Please use your official @cavendish.ac.ug email address.');
+                return;
+            }
+
+            // 2. Password Confirmation
+            if (pass !== conf) {
+                alert('ERROR: Passwords do not match.');
+                return;
+            }
+
+            // 3. Simple Strength Check
+            if (pass.length < 8) {
+                alert('ERROR: Password must be at least 8 characters for security compliance.');
+                return;
+            }
+
+            // SDLC: Successful persistence simulation
+            alert(`SUCCESS: Professional ${role} account request submitted for validation. You will be notified via email.`);
+            toggleAuth('login');
+        });
+
+        document.getElementById('submit-retake').addEventListener('click', () => {
+            alert('SUCCESS: Retake application submitted. A fee of 100,000 UGX has been billed to your account ledger.');
+            closeModal('retake-modal');
+        });
+
+    </script>
+</body>
+</html>
