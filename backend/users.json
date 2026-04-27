@@ -1,0 +1,130 @@
+[
+    {
+        "id": 1,
+        "username": "ababiku",
+        "password": "password123",
+        "role": "Student",
+        "full_name": "Ababiku Brenda",
+        "email": "ababiku@students.cavendish.ac.ug",
+        "studentId": "273-318",
+        "course": "BSc. Software Engineering",
+        "year": 2,
+        "balance": 0
+    },
+    {
+        "id": 2,
+        "username": "alimpa",
+        "password": "password123",
+        "role": "Student",
+        "full_name": "Alimpa Anne Hillary",
+        "email": "alimpa@students.cavendish.ac.ug",
+        "studentId": "269-896",
+        "course": "BSc. Information Technology",
+        "year": 1,
+        "balance": 0
+    },
+    {
+        "id": 3,
+        "username": "egabo",
+        "password": "password123",
+        "role": "Student",
+        "full_name": "Egabo Aaron",
+        "email": "egabo@students.cavendish.ac.ug",
+        "studentId": "258-154",
+        "course": "Bachelor of Computer Science",
+        "year": 3,
+        "balance": 1500000
+    },
+    {
+        "id": 4,
+        "username": "faida",
+        "password": "password123",
+        "role": "Student",
+        "full_name": "Faida Nancy",
+        "email": "faida@students.cavendish.ac.ug",
+        "studentId": "230-500",
+        "course": "BSc. Software Engineering",
+        "year": 2,
+        "balance": 0
+    },
+    {
+        "id": 5,
+        "username": "kirabo",
+        "password": "password123",
+        "role": "Student",
+        "full_name": "Kirabo Alice",
+        "email": "kirabo@students.cavendish.ac.ug",
+        "studentId": "274-961",
+        "course": "BSc. Data Science",
+        "year": 1,
+        "balance": 0
+    },
+    {
+        "id": 6,
+        "username": "muawia",
+        "password": "password123",
+        "role": "Student",
+        "full_name": "Muawia Mohamed",
+        "email": "muawia@students.cavendish.ac.ug",
+        "studentId": "229-449",
+        "course": "BSc. Cyber Security",
+        "year": 2,
+        "balance": 2500000
+    },
+    {
+        "id": 7,
+        "username": "natozo",
+        "password": "password123",
+        "role": "Student",
+        "full_name": "Natozo Patience Martha",
+        "email": "natozo@students.cavendish.ac.ug",
+        "studentId": "258-901",
+        "course": "BSc. Software Engineering",
+        "year": 3,
+        "balance": 0
+    },
+    {
+        "id": 8,
+        "username": "niwasiima",
+        "password": "password123",
+        "role": "Student",
+        "full_name": "Niwasiima Ashelycole",
+        "email": "niwasiima@students.cavendish.ac.ug",
+        "studentId": "275-353",
+        "course": "Bachelor of Business Computing",
+        "year": 1,
+        "balance": 0
+    },
+    {
+        "id": 9,
+        "username": "onyango",
+        "password": "password123",
+        "role": "Student",
+        "full_name": "Onyango John Steven",
+        "email": "onyango@students.cavendish.ac.ug",
+        "studentId": "270-472",
+        "course": "BSc. Information Technology",
+        "year": 2,
+        "balance": 1000000
+    },
+    {
+        "id": 10,
+        "username": "rwothomio",
+        "password": "password123",
+        "role": "Student",
+        "full_name": "Rwothomio Evans .E.",
+        "email": "rwothomio@students.cavendish.ac.ug",
+        "studentId": "275-372",
+        "course": "BSc. Software Engineering",
+        "year": 3,
+        "balance": 0
+    },
+    {
+        "id": 101,
+        "username": "cuu_admin",
+        "password": "admin123",
+        "role": "Admin",
+        "full_name": "System Admin (Moses)",
+        "email": "admin@cavendish.ac.ug"
+    }
+]
