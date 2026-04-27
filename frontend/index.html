@@ -50,16 +50,6 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 15px -3px rgba(0, 33, 71, 0.1);
         }
-
-        /* Mobile Sidebar Active State */
-        .mobile-menu-active {
-            transform: translateX(0) !important;
-        }
-
-        /* Smooth Sidebar Transition */
-        aside {
-            transition: transform 0.3s ease-in-out;
-        }
     </style>
     <script>
         tailwind.config = {
@@ -291,9 +281,9 @@
     </div>
 
     <!-- Retake Modal -->
-    <div id="retake-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-6">
+    <div id="retake-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6">
         <div class="absolute inset-0 bg-navy/60 backdrop-blur-sm"></div>
-        <div class="relative bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
+        <div class="relative bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-y-auto max-h-[95vh] animate-fade-in">
             <div class="navy-bg p-6 text-center text-white">
                 <h3 class="text-xl font-bold">Retake Application</h3>
                 <p class="text-blue-100 text-xs">Official Registrar Form - F.24</p>
@@ -324,9 +314,9 @@
     </div>
 
     <!-- Virtual ID Modal -->
-    <div id="id-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-6">
+    <div id="id-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6">
         <div class="absolute inset-0 bg-navy/60 backdrop-blur-sm"></div>
-        <div class="relative bg-white w-full max-w-[320px] sm:max-w-[320px] max-h-[90vh] overflow-y-auto rounded-[2rem] shadow-2xl animate-fade-in border-4 border-white">
+        <div class="relative bg-white w-full max-w-[320px] rounded-[2rem] shadow-2xl overflow-y-auto max-h-[95vh] animate-fade-in border-4 border-white">
             <div class="navy-bg h-24 relative overflow-hidden text-white">
                 <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
                 <div class="p-6 text-center">
@@ -361,20 +351,19 @@
         </div>
     </div>
 
-    <!-- Sidebar Overlay -->
-    <div id="sidebar-overlay" class="fixed inset-0 bg-navy/40 backdrop-blur-sm z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
-
     <!-- Dashboard Container (Hidden by default) -->
-    <div id="dashboard-screen" class="hidden flex-grow flex">
+    <div id="dashboard-screen" class="hidden flex-grow flex relative">
+        <!-- Sidebar Overlay (Mobile) -->
+        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-navy/60 backdrop-blur-sm z-40 hidden md:hidden transition-opacity"></div>
+
         <!-- Sidebar -->
-        <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 navy-bg text-white flex flex-col z-50 transform -translate-x-full md:relative md:translate-x-0 transition-transform">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out z-50 w-64 navy-bg text-white flex flex-col shadow-2xl md:shadow-none">
             <div class="p-6 flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <i data-lucide="shield-check" class="w-8 h-8"></i>
                     <span class="font-bold text-lg tracking-tight">CUU SYSTEM</span>
                 </div>
-                <!-- Close Button (Mobile only) -->
-                <button onclick="toggleSidebar()" class="md:hidden p-2 hover:bg-white/10 rounded-lg">
+                <button onclick="toggleSidebar()" class="md:hidden text-white/70 hover:text-white">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
@@ -392,26 +381,15 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-grow flex flex-col bg-gray-50 overflow-y-auto">
+        <main class="flex-grow flex flex-col bg-gray-50 overflow-y-auto w-full">
             <header class="bg-white h-16 border-b flex items-center justify-between px-4 md:px-8 transition-colors sticky top-0 z-30">
-                <div class="flex items-center space-x-4">
-                    <!-- Hamburger Menu Button -->
-                    <button onclick="toggleSidebar()" class="md:hidden p-2 text-gray-500 hover:text-navy hover:bg-gray-50 rounded-xl transition-all">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="md:hidden p-2 -ml-2 text-gray-500 hover:text-navy hover:bg-gray-50 rounded-xl transition-all">
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
-                    <h2 id="page-title" class="text-lg font-bold navy-text">Dashboard Overview</h2>
+                    <h2 id="page-title" class="text-lg font-bold navy-text hidden sm:block">Dashboard Overview</h2>
                 </div>
-
-                <!-- Admin Search Bar (Only for Admins) -->
-                <div id="admin-search-container" class="hidden flex-grow max-w-md mx-8">
-                    <div class="relative">
-                        <input type="text" id="admin-search-input" placeholder="Search Student ID (e.g. 273-318)..." 
-                               class="w-full pl-10 pr-4 py-2 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-navy transition-all"
-                               onkeyup="handleAdminSearch(event)">
-                        <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-2 md:space-x-6">
                     <!-- Theme Toggle -->
                     <button onclick="toggleTheme()" class="p-2 text-gray-500 hover:text-navy hover:bg-gray-50 rounded-xl transition-all">
                         <i id="theme-icon" data-lucide="moon" class="w-5 h-5"></i>
@@ -455,35 +433,19 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center space-x-4 border-l pl-6">
-                        <div class="hidden sm:block text-right mr-4">
+                    <div class="flex items-center space-x-3 md:space-x-4 border-l pl-3 md:pl-6 ml-2 md:ml-0">
+                        <div class="text-right mr-2 md:mr-4 hidden sm:block">
                             <p id="user-name" class="text-sm font-bold navy-text">User Name</p>
                             <p id="user-role" class="text-[10px] text-gray-500 uppercase tracking-widest">Role</p>
                         </div>
-                        <div id="user-avatar" class="w-10 h-10 rounded-full bg-navy text-white flex items-center justify-center font-bold overflow-hidden">
+                        <div id="user-avatar" class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-navy text-white flex items-center justify-center font-bold overflow-hidden shrink-0">
                             U
                         </div>
                     </div>
                 </div>
             </header>
-
-            <!-- Admin Search Result Toast/Bar -->
-            <div id="search-result-toast" class="hidden mx-8 mt-4 p-4 bg-navy text-white rounded-2xl animate-fade-in flex items-center justify-between shadow-lg">
-                <div class="flex items-center gap-4">
-                    <div class="p-2 bg-white/10 rounded-xl">
-                        <i data-lucide="user-search" class="w-5 h-5 text-blue-300"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs font-bold text-blue-200 uppercase tracking-widest">Search Result</p>
-                        <p id="search-result-text" class="text-sm font-medium">Student found: Ababiku Brenda (Status: Cleared)</p>
-                    </div>
-                </div>
-                <button onclick="this.parentElement.classList.add('hidden')" class="p-1 hover:bg-white/10 rounded-lg">
-                    <i data-lucide="x" class="w-4 h-4"></i>
-                </button>
-            </div>
             
-            <div id="content-area" class="p-8">
+            <div id="content-area" class="p-4 md:p-8 overflow-x-hidden">
                 <!-- Content will be injected here -->
             </div>
         </main>
@@ -497,31 +459,6 @@
         const state = {
             user: null,
             isLoggedIn: false
-        };
-
-        const mockUsers = {
-            'ababiku': { id: 1, studentId: '273-318', role: 'Student', full_name: 'Ababiku Brenda', course: 'BSc. Software Engineering', year: 2 },
-            'alimpa': { id: 2, studentId: '269-896', role: 'Student', full_name: 'Alimpa Anne Hillary', course: 'BSc. Information Technology', year: 1 },
-            'egabo': { id: 3, studentId: '258-154', role: 'Student', full_name: 'Egabo Aaron', course: 'Bachelor of Computer Science', year: 3, blocked: true },
-            'faida': { id: 4, studentId: '230-500', role: 'Student', full_name: 'Faida Nancy', course: 'BSc. Software Engineering', year: 2 },
-            'kirabo': { id: 5, studentId: '274-961', role: 'Student', full_name: 'Kirabo Alice', course: 'BSc. Data Science', year: 1 },
-            'muawia': { id: 6, studentId: '229-449', role: 'Student', full_name: 'Muawia Mohamed', course: 'BSc. Cyber Security', year: 2, blocked: true },
-            'natozo': { id: 7, studentId: '258-901', role: 'Student', full_name: 'Natozo Patience Martha', course: 'BSc. Software Engineering', year: 3 },
-            'niwasiima': { id: 8, studentId: '275-353', role: 'Student', full_name: 'Niwasiima Ashelycole', course: 'Bachelor of Business Computing', year: 1 },
-            'onyango': { id: 9, studentId: '270-472', role: 'Student', full_name: 'Onyango John Steven', course: 'BSc. Information Technology', year: 2, blocked: true },
-            'rwothomio': { id: 10, studentId: '275-372', role: 'Student', full_name: 'Rwothomio Evans .E.', course: 'BSc. Software Engineering', year: 3 },
-            'cuu_admin': { id: 101, role: 'Admin', full_name: 'System Admin (Moses)' }
-        };
-
-        // Navigation Logic for Mobile
-        const toggleSidebar = () => {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            sidebar.classList.toggle('mobile-menu-active');
-            overlay.classList.toggle('hidden');
-            
-            // Re-initialize icons just in case
-            lucide.createIcons();
         };
 
         // Navigation Configs
@@ -541,6 +478,12 @@
         };
 
         // UI Helpers
+        const toggleSidebar = () => {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        };
         const showScreen = (screenId) => {
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('signup-screen').classList.add('hidden');
@@ -574,9 +517,8 @@
 
         // Logic for Financial Gate
         const checkResults = (studentId) => {
-            const user = Object.values(mockUsers).find(u => u.id === studentId);
-            const hasBalance = user?.blocked || false;
-            const balanceAmount = hasBalance ? '2.5M' : '0';
+            const hasBalance = (studentId === 1 || studentId === 9);
+            const balanceAmount = studentId === 1 ? '2.5M' : (studentId === 9 ? '4.5M' : '0');
 
             const results = [
                 { code: 'BIT212', name: 'Systems Analysis and Design', score: 78, grade: 'B+', gp: 4.5 },
@@ -614,46 +556,48 @@
                     </div>
 
                     <!-- Results Table -->
-                    <div class="bg-white rounded-3xl overflow-x-auto shadow-sm border border-gray-100">
-                        <table class="w-full text-left border-collapse min-w-[600px]">
-                            <thead>
-                                <tr class="bg-gray-50/50 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                                    <th class="p-6">Code</th>
-                                    <th class="p-6">Module Name</th>
-                                    <th class="p-6 text-center">Score</th>
-                                    <th class="p-6 text-center">Grade</th>
-                                    <th class="p-6 text-center">GP</th>
-                                    <th class="p-6 text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-100">
-                                ${results.map(r => {
-                                    const isFail = r.score < 50;
-                                    return `
-                                        <tr class="group hover:bg-gray-50 transition-colors">
-                                            <td class="p-6 font-mono font-bold text-navy text-sm">${r.code}</td>
-                                            <td class="p-6 font-medium text-gray-700 text-sm">${r.name}</td>
-                                            <td class="p-6 text-center">
-                                                ${hasBalance ? '<span class="text-[10px] font-bold text-red-400 bg-red-50 px-2 py-1 rounded">BLOCKED</span>' : 
-                                                `<span class="text-sm font-bold ${isFail ? 'text-red-500' : 'text-gray-800'}">${r.score}</span>`}
-                                            </td>
-                                            <td class="p-6 text-center">
-                                                ${hasBalance ? '<span class="text-[10px] font-bold text-red-400 bg-red-50 px-2 py-1 rounded">BLOCKED</span>' : 
-                                                `<span class="px-3 py-1 ${isFail ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'} rounded-full font-bold text-xs">${r.grade}</span>`}
-                                            </td>
-                                            <td class="p-6 text-center font-bold text-navy text-sm">${hasBalance ? '—' : r.gp.toFixed(1)}</td>
-                                            <td class="p-6 text-right">
-                                                ${!hasBalance && isFail ? `
-                                                    <button onclick="openRetakeModal('${r.code}', '${r.name}')" class="text-[10px] font-bold text-red-600 hover:text-red-700 underline underline-offset-4">
-                                                        Apply for Retake
-                                                    </button>
-                                                ` : '<span class="text-[10px] text-gray-300 font-bold uppercase">No Actions</span>'}
-                                            </td>
-                                        </tr>
-                                    `;
-                                }).join('')}
-                            </tbody>
-                        </table>
+                    <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse whitespace-nowrap">
+                                <thead>
+                                    <tr class="bg-gray-50/50 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                        <th class="p-4 md:p-6">Code</th>
+                                        <th class="p-4 md:p-6">Module Name</th>
+                                        <th class="p-4 md:p-6 text-center">Score</th>
+                                        <th class="p-4 md:p-6 text-center">Grade</th>
+                                        <th class="p-4 md:p-6 text-center">GP</th>
+                                        <th class="p-4 md:p-6 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    ${results.map(r => {
+                                        const isFail = r.score < 50;
+                                        return `
+                                            <tr class="group hover:bg-gray-50 transition-colors">
+                                                <td class="p-4 md:p-6 font-mono font-bold text-navy text-sm">${r.code}</td>
+                                                <td class="p-4 md:p-6 font-medium text-gray-700 text-sm whitespace-normal min-w-[200px]">${r.name}</td>
+                                                <td class="p-4 md:p-6 text-center">
+                                                    ${hasBalance ? '<span class="text-[10px] font-bold text-red-400 bg-red-50 px-2 py-1 rounded">BLOCKED</span>' : 
+                                                    `<span class="text-sm font-bold ${isFail ? 'text-red-500' : 'text-gray-800'}">${r.score}</span>`}
+                                                </td>
+                                                <td class="p-4 md:p-6 text-center">
+                                                    ${hasBalance ? '<span class="text-[10px] font-bold text-red-400 bg-red-50 px-2 py-1 rounded">BLOCKED</span>' : 
+                                                    `<span class="px-3 py-1 ${isFail ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'} rounded-full font-bold text-xs">${r.grade}</span>`}
+                                                </td>
+                                                <td class="p-4 md:p-6 text-center font-bold text-navy text-sm">${hasBalance ? '—' : r.gp.toFixed(1)}</td>
+                                                <td class="p-4 md:p-6 text-right">
+                                                    ${!hasBalance && isFail ? `
+                                                        <button onclick="openRetakeModal('${r.code}', '${r.name}')" class="text-[10px] font-bold text-red-600 hover:text-red-700 underline underline-offset-4">
+                                                            Apply for Retake
+                                                        </button>
+                                                    ` : '<span class="text-[10px] text-gray-300 font-bold uppercase">No Actions</span>'}
+                                                </td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     ${hasBalance ? `
@@ -706,26 +650,7 @@
             document.getElementById(id).classList.add('hidden');
         };
 
-        const handleAdminSearch = (e) => {
-            if (e.key === 'Enter') {
-                const query = e.target.value.trim();
-                const student = Object.values(mockUsers).find(u => u.studentId === query);
-                const toast = document.getElementById('search-result-toast');
-                const text = document.getElementById('search-result-text');
-                
-                if (student) {
-                    toast.classList.remove('hidden');
-                    text.innerHTML = `Student Found: <strong>${student.full_name}</strong> - Status: <span class="${student.blocked ? 'text-red-300' : 'text-green-300'} font-bold">${student.blocked ? 'Blocked (Fees)' : 'Cleared'}</span>`;
-                } else {
-                    toast.classList.remove('hidden');
-                    text.innerHTML = `<span class="text-red-300 font-bold">No student found with ID: ${query}</span>`;
-                }
-                lucide.createIcons();
-            }
-        };
-
         const renderOverview = (role) => {
-            const isBlocked = state.user.blocked;
             const studentStats = `
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover-lift">
@@ -741,14 +666,14 @@
                             <span class="p-3 bg-green-50 rounded-xl text-green-600"><i data-lucide="dollar-sign" class="w-6 h-6"></i></span>
                         </div>
                         <p class="text-gray-500 text-sm font-medium">Fee Balance</p>
-                        <h4 class="text-3xl font-bold ${isBlocked ? 'text-red-500' : 'text-green-600'}">${isBlocked ? '2.5M UGX' : 'Cleared'}</h4>
+                        <h4 class="text-3xl font-bold ${state.user.id == 6 ? 'text-red-500' : 'text-green-600'}">${state.user.id == 6 ? '1.5M UGX' : 'Cleared'}</h4>
                     </div>
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover-lift">
                         <div class="flex items-center justify-between mb-4">
                             <span class="p-3 bg-purple-50 rounded-xl text-purple-600"><i data-lucide="trending-up" class="w-6 h-6"></i></span>
                         </div>
                         <p class="text-gray-500 text-sm font-medium">Current GPA</p>
-                        <h4 class="text-3xl font-bold navy-text">${isBlocked ? '—' : '3.82'}</h4>
+                        <h4 class="text-3xl font-bold navy-text">3.82</h4>
                     </div>
                 </div>
             `;
@@ -771,8 +696,14 @@
             const username = document.getElementById('username').value;
             
             // Mock Auth Logic
-            const users = mockUsers;
-            const user = users[username];
+            const users = {
+                'mary_atwine': { id: 1, role: 'Student', full_name: 'Mary Atwine' },
+                'john_musoke': { id: 2, role: 'Student', full_name: 'John Musoke' },
+                'brian_k': { id: 3, role: 'Student', full_name: 'Brian Katerega' },
+                'david_o': { id: 7, role: 'Student', full_name: 'David Okello' },
+                'peter_b': { id: 9, role: 'Student', full_name: 'Peter Bukenya' },
+                'cuu_admin': { id: 101, role: 'Admin', full_name: 'System Admin (Moses)' }
+            };
 
             const user = users[username];
             if (user) {
@@ -796,23 +727,15 @@
                 
                 showScreen('dashboard-screen');
                 renderOverview(user.role);
-                
-                // Show search bar if admin
-                const adminSearch = document.getElementById('admin-search-container');
-                if (user.role === 'Admin') adminSearch.classList.remove('hidden');
-                else adminSearch.classList.add('hidden');
-
                 lucide.createIcons();
             } else {
-                alert('Invalid credentials! Try "ababiku", "natozo", or "cuu_admin"');
+                alert('Invalid credentials! Try "student_john", "student_mary", or "cuu_admin"');
             }
         });
 
         const renderProfile = (user) => {
-            const hasBalance = user.blocked || false;
-            const balanceAmount = hasBalance ? '2.5M' : '0';
-            const year = user.year || Math.floor(Math.random() * 3) + 1;
-            const course = user.course || 'BSc. Software Engineering';
+            const hasBalance = (user.id === 1 || user.id === 9); // Mary and Peter
+            const balanceAmount = user.id === 1 ? '2.5M' : (user.id === 9 ? '4.5M' : '0');
             
             let html = `
                 <div class="animate-fade-in max-w-5xl mx-auto space-y-8">
@@ -832,18 +755,18 @@
                                 <h2 class="text-3xl font-bold navy-text">${user.full_name}</h2>
                                 <span class="role-badge ${user.role === 'Student' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}">${user.role}</span>
                             </div>
-                            <p class="text-lg font-bold navy-text mb-1">${course}</p>
-                            <p class="text-gray-500 font-medium mb-6">Faculty of Science & Technology • Year ${year}</p>
+                            <p class="text-lg font-bold navy-text mb-1">Bachelor of Science in Software Engineering</p>
+                            <p class="text-gray-500 font-medium mb-6">Faculty of Science & Technology • Year ${user.id === 1 ? '2' : '1'}</p>
                             
                             <!-- Digital ID Card -->
                             <div class="flex gap-4">
                                 <div onclick="openVirtualID()" class="inline-flex items-center gap-6 bg-gray-50 p-4 rounded-2xl border border-gray-100 group hover:border-navy transition-all cursor-pointer">
                                     <div>
                                         <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">University Digital ID</p>
-                                        <p class="text-lg font-mono font-bold navy-text">${user.studentId || 'CUU-2024-XXX'}</p>
+                                        <p class="text-lg font-mono font-bold navy-text">${user.id === 1 ? 'CUU-2024-001' : 'CUU-2024-002'}</p>
                                     </div>
                                     <div class="w-12 h-12 bg-white p-1 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
-                                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${user.studentId}" class="w-full h-full" alt="QR">
+                                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${user.username}" class="w-full h-full" alt="QR">
                                     </div>
                                 </div>
                                 <button onclick="openVirtualID()" class="bg-navy text-white px-6 py-4 rounded-2xl font-bold flex flex-col items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-lg group">
@@ -862,7 +785,7 @@
                                 <h3 class="text-lg font-bold navy-text mb-6 flex items-center gap-2">
                                     <i data-lucide="graduation-cap" class="w-5 h-5"></i> Academic Snapshot
                                 </h3>
-                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div class="grid grid-cols-3 gap-4">
                                     <div class="bg-blue-50/50 p-4 rounded-2xl text-center">
                                         <p class="text-xs text-gray-500 font-bold mb-1">GPA</p>
                                         <p class="text-2xl font-bold navy-text">3.82</p>
@@ -886,7 +809,7 @@
                                     </h3>
                                     <button class="text-navy font-bold text-xs hover:underline">Edit Details</button>
                                 </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-12">
+                                <div class="grid grid-cols-2 gap-y-6 gap-x-12">
                                     <div>
                                         <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Personal Email</p>
                                         <p class="text-sm font-medium text-gray-700">${user.username}@gmail.com</p>
@@ -935,9 +858,63 @@
                                 </button>
                             </div>
 
+                            <!-- SEMESTER ROADMAP & CALENDAR -->
+                            <div class="bg-navy rounded-3xl p-8 text-white shadow-xl">
+                                <h3 class="text-lg font-bold mb-6 flex items-center gap-2 border-b border-navy-light pb-4">
+                                    <i data-lucide="calendar" class="w-5 h-5 text-blue-300"></i> Semester Roadmap
+                                </h3>
+                                
+                                <ul class="space-y-6 mb-8 text-sm">
+                                    <li class="flex justify-between items-center group">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs text-blue-300 uppercase font-bold tracking-tighter">Mid-Sem Exams</span>
+                                            <span class="font-medium">April 10, 2026</span>
+                                        </div>
+                                        <i data-lucide="check-circle" class="w-5 h-5 text-green-400 opacity-50 group-hover:opacity-100 transition-opacity"></i>
+                                    </li>
+                                    <li class="flex justify-between items-center group border-l-2 border-blue-400/30 pl-4">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs text-blue-300 uppercase font-bold tracking-tighter">Coursework Upload</span>
+                                            <span class="font-medium">May 18, 2026</span>
+                                        </div>
+                                        <div class="w-2 h-2 bg-blue-400 rounded-full animate-ping"></div>
+                                    </li>
+                                    <li class="flex justify-between items-center group">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs ${hasBalance ? 'text-red-400' : 'text-blue-300'} uppercase font-bold tracking-tighter">Final Examinations</span>
+                                            <span class="font-medium ${hasBalance ? 'text-red-300' : ''}">June 01, 2026</span>
+                                        </div>
+                                        ${hasBalance ? '<i data-lucide="lock" class="w-5 h-5 text-red-400"></i>' : '<i data-lucide="arrow-right" class="w-4 h-4 text-blue-300"></i>'}
+                                    </li>
+                                </ul>
+
+                                <!-- Mini Calendar Widget -->
+                                <div class="bg-navy-dark/50 rounded-2xl p-4 border border-navy-light/10">
+                                    <div class="flex justify-between items-center mb-4 px-1">
+                                        <span class="text-xs font-bold uppercase tracking-widest text-blue-200">May 2026</span>
+                                        <div class="flex gap-2">
+                                            <i data-lucide="chevron-left" class="w-3 h-3 text-blue-400 cursor-pointer"></i>
+                                            <i data-lucide="chevron-right" class="w-3 h-3 text-blue-400 cursor-pointer"></i>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-7 text-center text-[10px] gap-2 font-bold text-blue-400 mb-2">
+                                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                                    </div>
+                                    <div class="grid grid-cols-7 text-center text-[10px] gap-2 transition-all">
+                                        <span class="text-navy-light">27</span><span class="text-navy-light">28</span><span class="text-navy-light">29</span><span class="text-navy-light">30</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">1</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">2</span>
+                                        <span class="p-1 bg-white text-navy rounded-full shadow-lg">3</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">4</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">5</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">6</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1 border-b border-red-400">7</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">8</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">9</span>
+                                        <span class="hover:bg-blue-400/20 rounded-md cursor-pointer p-1">10</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
                             <!-- DOCUMENT VAULT -->
                             <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
@@ -970,7 +947,7 @@
         };
 
         const renderEnrollment = (user) => {
-            const hasBalance = user.blocked || false;
+            const hasBalance = (user.id === 1 || user.id === 9);
             const programs = [
                 "BSc. Software Engineering", "BSc. Computer Science", "Bachelor of IT", 
                 "BSc. Data Science & AI", "BBA. Accounting & Finance", "BBA. Procurement & Logistics",
@@ -1025,14 +1002,14 @@
                                 </div>
                             </div>
 
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left">
+                            <div class="overflow-x-auto -mx-8 px-8 md:mx-0 md:px-0 pb-4">
+                                <table class="w-full text-left whitespace-nowrap">
                                     <thead>
                                         <tr class="text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b pb-4">
-                                            <th class="pb-4">Module Code</th>
-                                            <th class="pb-4">Module Name</th>
-                                            <th class="pb-4 text-center">CU</th>
-                                            <th class="pb-4">Status</th>
+                                            <th class="pb-4 pr-4">Module Code</th>
+                                            <th class="pb-4 pr-4">Module Name</th>
+                                            <th class="pb-4 pr-4 text-center">CU</th>
+                                            <th class="pb-4 pr-4">Status</th>
                                             <th class="pb-4 text-right">Actions</th>
                                         </tr>
                                     </thead>
@@ -1089,8 +1066,8 @@
         };
 
         const renderFinance = (user) => {
-            const hasBalance = user.blocked || false;
-            const balanceAmount = hasBalance ? 2500000 : 0;
+            const hasBalance = (user.id === 1 || user.id === 9);
+            const balanceAmount = user.id === 1 ? 2500000 : (user.id === 9 ? 4500000 : 0);
             
             const transactions = [
                 { date: '01/02/2026', desc: 'Tuition Fees - Semester 1', debit: 1800000, credit: 0 },
@@ -1140,7 +1117,7 @@
                             </button>
                         </div>
                         <div class="overflow-x-auto">
-                            <table class="w-full text-left">
+                            <table class="w-full text-left whitespace-nowrap">
                                 <thead class="bg-navy text-white text-[10px] uppercase tracking-widest">
                                     <tr>
                                         <th class="p-4">Date</th>
@@ -1308,7 +1285,7 @@
             const user = state.user;
             document.getElementById('id-name').textContent = user.full_name;
             document.getElementById('id-photo').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`;
-            document.getElementById('id-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${user.studentId}`;
+            document.getElementById('id-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${user.username}`;
             document.getElementById('id-modal').classList.remove('hidden');
             lucide.createIcons();
         };
